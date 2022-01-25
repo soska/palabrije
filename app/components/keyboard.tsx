@@ -3,38 +3,28 @@ import { WORD_LENGTH } from "~/lib/constants";
 
 const allLetters = "abcdefghijklmnñopqrstuvwxyz";
 
-export function Keyboard() {
-  const [letters, setLetters] = React.useState<string[]>([]);
-  const addLetter = (letter: string) => () => {
-    if (letters.length < WORD_LENGTH) {
-      setLetters([...letters, letter]);
-    }
-  };
-
-  const removeLastLetter = () => {
-    if (letters.length > 0) {
-      setLetters(letters.slice(0, -1));
-    }
-  };
-
-  React.useEffect(() => {
-    if (letters.length === WORD_LENGTH) {
-      setLetters([]);
-      console.log("submit");
-    }
-  }, [letters]);
-
+export function Keyboard({
+  onAddLetter,
+  onRemoveLastLetter,
+  onPressEnter,
+}: {
+  onAddLetter: (letter: string) => () => void;
+  onRemoveLastLetter: () => void;
+  onPressEnter: () => void;
+}) {
   return (
     <>
-      {letters.join("")}
       <div className="keyboard">
         {allLetters.split("").map((letter) => (
-          <button className="key" key={letter} onClick={addLetter(letter)}>
+          <button className="key" key={letter} onClick={onAddLetter(letter)}>
             {letter}
           </button>
         ))}
-        <button className="key" onClick={removeLastLetter}>
+        <button className="key" onClick={onRemoveLastLetter}>
           &larr;
+        </button>
+        <button className="key" onClick={onPressEnter}>
+          Enter
         </button>
       </div>
     </>

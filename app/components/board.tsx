@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   gameStatus,
   letterStatus,
@@ -11,23 +12,14 @@ import type { SessionState } from "~/lib/types";
 const rows = Array(MAX_ROUNDS).fill(null);
 const columns = Array(WORD_LENGTH).fill(null);
 
-export function Board({
-  gameState,
-  word,
-}: {
-  gameState: SessionState;
-  word: string;
-}) {
-  const { status = gameStatus.PLAYING, plays = [], error } = gameState;
+export function Tiles({ gameState }: { gameState: SessionState }) {
+  const { plays = [] } = gameState;
 
   return (
-    <div className="board">
-      <h1>word of the day!</h1>
-      <h2>{word}</h2>
-      <div className="flash">{error}</div>
-      {rows.map((row, i) => (
+    <>
+      {rows.map((_, i) => (
         <div className="tiles-row" key={"row_" + i}>
-          {columns.map((column, j) => {
+          {columns.map((_, j) => {
             const currentLetter = plays[i]?.letters[j];
             let className = ["tile"];
             if (currentLetter?.level === letterStatus.GREEN) {
@@ -45,13 +37,53 @@ export function Board({
           })}
         </div>
       ))}
+    </>
+  );
+}
 
+export function Board({
+  gameState,
+  word,
+}: {
+  gameState: SessionState;
+  word: string;
+}) {
+  const { status = gameStatus.PLAYING, plays = [], error } = gameState;
+
+  const [letters, setLetters] = React.useState<string[]>([]);
+  const onAddLetter = (letter: string) => () => {
+    if (letters.length < WORD_LENGTH) {
+      setLetters([...letters, letter]);
+    }
+  };
+
+  const onRemoveLastLetter = () => {
+    if (letters.length > 0) {
+      setLetters(letters.slice(0, -1));
+    }
+  };
+
+  const handlePressEnter = () => {
+    console.log(letters);
+  };
+
+  return (
+    <div className="board">
+      <h1>word of the day!</h1>
+      <h2>{word}</h2>
+      <div className="flash">{error}</div>
+      <Tiles gameState={gameState} />
       <form method="POST">
         <input type="text" name="guess" />
         <input type="hidden" name="round" value="2" />
         <button>Go</button>
       </form>
-      <Keyboard />
+      {letters.join("")}
+      <Keyboard
+        onAddLetter={onAddLetter}
+        onRemoveLastLetter={onRemoveLastLetter}
+        onPressEnter={handlePressEnter}
+      />
     </div>
   );
 }
