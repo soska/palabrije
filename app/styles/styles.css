@@ -1,0 +1,73 @@
+:root {
+  --gray: #2a2a3a;
+  --yellow: #ffc600;
+  --green: #22bb55;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--gray);
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.board {
+  width: min(500px, calc(100% - 2rem));
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tiles-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.tile {
+  width: 50px;
+  height: 50px;
+  background: black;
+  border: 1px solid gray;
+  margin: 2px;
+  border-radius: 4px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.tile.green {
+  background: var(--green);
+}
+
+.tile.yellow {
+  background: var(--yellow);
+}
+
+.keyboard {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.key {
+  unset: all;
+  width: 30px;
+  height: 40px;
+  background: black;
+  border: 1px solid gray;
+  margin: 2px;
+  border-radius: 4px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
