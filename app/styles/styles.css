@@ -52,6 +52,10 @@ body {
   background: var(--yellow);
 }
 
+.tile.gray {
+  background: var(--gray);
+}
+
 .keyboard {
   display: flex;
   flex-wrap: wrap;

@@ -6,37 +6,72 @@ import {
   WORD_LENGTH,
 } from "~/lib/constants";
 import { Keyboard } from "~/components/keyboard";
-import type { SessionState } from "~/lib/types";
+import type { LetterGuess, Play, SessionState } from "~/lib/types";
 
 // array of five
 const rows = Array(MAX_ROUNDS).fill(null);
 const columns = Array(WORD_LENGTH).fill(null);
 
-export function Tiles({ gameState }: { gameState: SessionState }) {
-  const { plays = [] } = gameState;
+export function PlayRow({ play }: { play?: Play }) {
+  const letters = play?.letters ?? [];
+  console.log("letters", letters);
+  return (
+    <div className="tiles-row">
+      {columns.map((_, j) => {
+        const currentLetter = letters[j];
+        let className = ["tile"];
+        if (currentLetter?.level === letterStatus.GREEN) {
+          className.push("green");
+        }
+        if (currentLetter?.level === letterStatus.YELLOW) {
+          className.push("yellow");
+        }
+
+        if (currentLetter?.level === letterStatus.BLACK) {
+          className.push("gray");
+        }
+
+        return (
+          <div className={className.join(" ")} key={"card_" + j}>
+            {letters[j]?.letter ?? ""}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export function GuessRow({ guess = [] }: { guess: string[] }) {
+  return (
+    <div className="tiles-row">
+      {columns.map((_, j) => {
+        return (
+          <div className={"tile"} key={"guess-card_" + j}>
+            {guess[j] ?? ""}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export function Tiles({
+  gameState,
+  guess,
+}: {
+  gameState: SessionState;
+  guess: string[];
+}) {
+  const { plays = [], currentRound } = gameState;
 
   return (
     <>
-      {rows.map((_, i) => (
-        <div className="tiles-row" key={"row_" + i}>
-          {columns.map((_, j) => {
-            const currentLetter = plays[i]?.letters[j];
-            let className = ["tile"];
-            if (currentLetter?.level === letterStatus.GREEN) {
-              className.push("green");
-            }
-            if (currentLetter?.level === letterStatus.YELLOW) {
-              className.push("yellow");
-            }
-
-            return (
-              <div className={className.join(" ")} key={"card_" + i + j}>
-                {plays[i]?.letters[j]?.letter ?? ""}
-              </div>
-            );
-          })}
-        </div>
-      ))}
+      {rows.map((_, round) => {
+        if (round === currentRound) {
+          return <GuessRow key={"row_" + round} guess={guess} />;
+        }
+        return <PlayRow play={plays[round]} key={"row_" + round} />;
+      })}
     </>
   );
 }
@@ -48,7 +83,7 @@ export function Board({
   gameState: SessionState;
   word: string;
 }) {
-  const { status = gameStatus.PLAYING, plays = [], error } = gameState;
+  const { error } = gameState;
 
   const [letters, setLetters] = React.useState<string[]>([]);
   const onAddLetter = (letter: string) => () => {
@@ -72,9 +107,9 @@ export function Board({
       <h1>word of the day!</h1>
       <h2>{word}</h2>
       <div className="flash">{error}</div>
-      <Tiles gameState={gameState} />
+      <Tiles gameState={gameState} guess={letters} />
       <form method="POST">
-        <input type="text" name="guess" />
+        <input type="text" name="guess" value={letters.join("")} readOnly />
         <input type="hidden" name="round" value="2" />
         <button>Go</button>
       </form>
