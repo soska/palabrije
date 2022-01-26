@@ -1,7 +1,23 @@
 :root {
-  --gray: #2a2a3a;
+  --background: #1a1a2a;
+  --gray: #3a3a4a;
+  --light-gray: #6a6a6f;
   --yellow: #ffc600;
   --green: #22bb55;
+  --tile-background: var(--background);
+  --tile-border: var(--gray);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 * {
@@ -11,7 +27,7 @@
 }
 
 body {
-  background: var(--gray);
+  background: var(--background);
   font-family: system-ui, sans-serif;
   line-height: 1.5;
 }
@@ -31,11 +47,11 @@ body {
 }
 
 .tile {
-  width: 50px;
-  height: 50px;
-  background: black;
-  border: 1px solid gray;
-  margin: 2px;
+  width: 60px;
+  height: 60px;
+  background: var(--tile-background);
+  border: 1px solid var(--tile-border);
+  margin: 4px;
   border-radius: 4px;
   color: white;
   display: flex;
@@ -54,6 +70,15 @@ body {
 
 .tile.gray {
   background: var(--gray);
+}
+
+.tile.--empty {
+  /* animation: pulse 0.3s; */
+}
+
+.tile.--not-empty {
+  --tile-border: var(--light-gray);
+  animation: pulse 0.3s;
 }
 
 .keyboard {
