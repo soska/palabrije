@@ -58,7 +58,16 @@ body {
 
 .keyboard {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  /* flex-wrap: wrap; */
+}
+
+.keyboard .row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  jutify-content: center;
 }
 
 .key {
